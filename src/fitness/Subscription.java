@@ -54,15 +54,6 @@ public class Subscription {
         this.client = client;
     }
 
-    /*public void setDurationOfSubscription(SubscriptionType type) {
-        //  я хочу чтобы метод задавал дату конца регистрации на основании типа абонимента
-        if ( type == SubscriptionType.ONETIME) {
-            setDateOfEndingRegistration(dateOfRegistration.plusDays(1));
-        } else {
-            setDateOfEndingRegistration(dateOfRegistration.plusMonths(6)); //  считаю, что все абонименты
-            // этого фитнес зала полугодовые
-        }
-    }*/
 
     public static Subscription generateAboniment(){
         Random random = new Random();
@@ -71,13 +62,11 @@ public class Subscription {
         String[] surnames = {"Балконская", "Ростова", "Обломова", "Ильинская", "Ульянова", "Базарова", "Троцкая", "Мурина", "Раскольникова", "Остин"};
         int typesCount = SubscriptionType.values().length;
         Subscription aboniment = new Subscription(SubscriptionType.getSubscriptionType(random.nextInt(typesCount)),
-                LocalDate.now().minusDays(random.nextInt(200)),
+                LocalDate.now().minusDays(random.nextInt(184)),
                 new Customer(names[random.nextInt(names.length)], surnames[random.nextInt(surnames.length)],
                         random.nextInt(2004 - 1950) + 1950));
         return aboniment;
     }
-
-
 
 
     @Override

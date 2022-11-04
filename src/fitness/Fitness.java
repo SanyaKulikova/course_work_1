@@ -47,9 +47,9 @@ public class Fitness {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
         String dateTimeToStr = formatter.format(time);
 
-        if (time.getHour() >= 22 ||  time.getHour() < 8) {
+        if (!this.isOpen(time)) {
             System.out.println("Фитнес зал работает с 8 утра и до 22 вечера");
-            registeredInGym = new Subscription[20];
+            return;
         } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
             System.out.println("Ваш абонимент просрочен");
         } else if (aboniment.getType() == SubscriptionType.NOONTIME && time.getHour() >= 16) {
@@ -84,9 +84,9 @@ public class Fitness {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
         String dateTimeToStr = formatter.format(time);
 
-        if (time.getHour() >= 22 ||  time.getHour() < 8) {
+        if (!this.isOpen(time)) {
             System.out.println("Фитнес зал работает с 8 утра и до 22 вечера");
-            registeredInGym = new Subscription[20];
+            return;
         } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
             System.out.println("Ваш абонимент просрочен");
         } else if (aboniment.getType() == SubscriptionType.NOONTIME) {
@@ -121,9 +121,9 @@ public class Fitness {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
         String dateTimeToStr = formatter.format(time);
 
-        if (time.getHour() >= 22 ||  time.getHour() < 8) {
+        if (!this.isOpen(time)) {
             System.out.println("Фитнес зал работает с 8 утра и до 22 вечера");
-            registeredInGym = new Subscription[20];
+            return;
         } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
             System.out.println("Ваш абонимент просрочен");
         } else if (aboniment.getType() == SubscriptionType.NOONTIME && time.getHour() >= 16) {
@@ -155,6 +155,15 @@ public class Fitness {
         }
     }
 
+    public boolean isOpen(LocalDateTime time) {
+        if (time.getHour() >= 22 ||  time.getHour() < 8) {
+            registeredInGym = new Subscription[20];
+            registeredInSwimmingPull = new Subscription[20];
+            registeredInGroupWorkouts = new Subscription[20];
+            System.out.println(this);
+            return false;
+        } else return true;
+    }
 
 
     // Реализовать возможность вывода информации о посетителях:

@@ -23,39 +23,39 @@ public class Application {
         Subscription aboniment08 = Subscription.generateAboniment();
         Subscription aboniment09 = Subscription.generateAboniment();
         Subscription aboniment10 = Subscription.generateAboniment();
-        Subscription aboniment11 = Subscription.generateAboniment();
-        Subscription aboniment12 = Subscription.generateAboniment();
-        Subscription aboniment13 = Subscription.generateAboniment();
-        Subscription aboniment14 = Subscription.generateAboniment();
-        Subscription aboniment15 = Subscription.generateAboniment();
-        Subscription aboniment16 = Subscription.generateAboniment();
-        Subscription aboniment17 = Subscription.generateAboniment();
-        Subscription aboniment18 = Subscription.generateAboniment();
-        Subscription aboniment19 = Subscription.generateAboniment();
-        Subscription aboniment20 = Subscription.generateAboniment();
-        Subscription aboniment21 = Subscription.generateAboniment();
-        Subscription aboniment22 = Subscription.generateAboniment();
-        Subscription aboniment23 = Subscription.generateAboniment();
-        Subscription aboniment24 = Subscription.generateAboniment();
-        Subscription aboniment25 = Subscription.generateAboniment();
-        Subscription aboniment26 = Subscription.generateAboniment();
-        Subscription aboniment27 = Subscription.generateAboniment();
-        Subscription aboniment28 = Subscription.generateAboniment();
-        Subscription aboniment29 = Subscription.generateAboniment();
-        Subscription aboniment30 = Subscription.generateAboniment();
+
+        Subscription aboniment11 = new Subscription(SubscriptionType.ONETIME, LocalDate.now().minusDays(20),
+                new Customer("Илья", "Муромец", 1997));
+        Subscription aboniment12 = new Subscription(SubscriptionType.ONETIME, LocalDate.now(),
+                new Customer("Джеймс", "Макэвой", 1980));
+        Subscription aboniment13 = new Subscription(SubscriptionType.NOONTIME, LocalDate.now().minusDays(20),
+                new Customer("Дэми", "Мур", 1978));
+        Subscription aboniment14 = new Subscription(SubscriptionType.FULL, LocalDate.now().minusDays(100),
+                new Customer("Шмель", "Шмель", 1966));
+
 
         LocalDateTime testTime01 = LocalDateTime.of(2022, Month.OCTOBER, 20, 15, 45);
         LocalDateTime testTime02 = LocalDateTime.now();
         String strWithDate01 = "2022-05-14T23:10:00";
         LocalDateTime testTime03 = LocalDateTime.parse(strWithDate01);
-        String strWithDate02 =  "22 декабря 2022 в 16 30";
+        String strWithDate02 =  "05 ноября 2022 в 16 30";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH mm");
         LocalDateTime testTime04 = LocalDateTime.parse(strWithDate02, dtf);
 
         Fitness fitness = new Fitness();
         System.out.println(fitness);
 
-        System.out.println(aboniment01);
+        fitness.registerInGym(testTime03, aboniment11);
+        System.out.println();
+        fitness.registerInGym(testTime04,aboniment11);
+        System.out.println();
+        fitness.registerInGym(testTime04, aboniment12);
+        System.out.println();
+        fitness.registerInSwimmingPool(testTime04, aboniment12);
+
+
+
+        /*System.out.println(aboniment01);
         fitness.registerInGroupWorkouts(testTime02,aboniment01);
         System.out.println(aboniment02);
         fitness.registerInGroupWorkouts(testTime01, aboniment02);
@@ -72,7 +72,7 @@ public class Application {
         fitness.registerInSwimmingPool(testTime04,aboniment07);
         System.out.println(aboniment08);
         fitness.registerInGym(testTime04, aboniment08);
-        System.out.println(fitness);
+        System.out.println(fitness);*/
 
 
 
