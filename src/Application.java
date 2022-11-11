@@ -1,7 +1,4 @@
-import fitness.Customer;
-import fitness.Fitness;
-import fitness.Subscription;
-import fitness.SubscriptionType;
+import fitness.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,13 +42,9 @@ public class Application {
         Fitness fitness = new Fitness();
         System.out.println(fitness);
 
-        fitness.registerInGym(testTime03, aboniment11);
-        System.out.println();
-        fitness.registerInGym(testTime04,aboniment11);
-        System.out.println();
-        fitness.registerInGym(testTime04, aboniment12);
-        System.out.println();
-        fitness.registerInSwimmingPool(testTime04, aboniment12);
+        fitness.registerInZone(testTime03, Zone.SWIMMINGPOOL, aboniment13);
+        fitness.registerInZone(testTime04, Zone.SWIMMINGPOOL, aboniment13);
+        fitness.registerInZone(testTime04, Zone.GROUPWORKOUTS, aboniment12);
 
 
 

@@ -42,8 +42,7 @@ public class Fitness {
     //  если в зоне нет свободных мест
     //  (если в такой абонимент уже зарегестрирован в другой зоне)
 
-    // в тренажорный зал попасть могут все, только в дневном абонименте ограничение по времени
-    public void registerInGym(LocalDateTime time, Subscription aboniment){
+    public void registerInZone(LocalDateTime time, Zone zone, Subscription aboniment) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
         String dateTimeToStr = formatter.format(time);
 
@@ -52,108 +51,24 @@ public class Fitness {
             return;
         } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
             System.out.println("Ваш абонимент просрочен");
-        } else if (aboniment.getType() == SubscriptionType.NOONTIME && time.getHour() >= 16) {
-            System.out.println("По вашему абонименту тренажорный зал можно посещать только до 16 часов");
+        } else if (time.getHour() >= aboniment.getType().getTimeOfEndWork().getHour()) {
+            System.out.println("Проход по вышему абонименту не доступен после " + aboniment.getType().getTimeOfEndWork().getHour()
+                    + " часов");
+        } else if (isAlreadyRegistered(aboniment)) {
+            System.out.println("Вы не можете одновременно заниматься в нескольких местах");
         } else {
             int test = 0;
-            for (int j = 0; j < registeredInSwimmingPull.length; j++) {
-                if (registeredInSwimmingPull[j] == aboniment) {
-                    System.out.println("Вы не можете одновременно заниматься в нескольких местах");
-                    test++;
-                } else if (registeredInGroupWorkouts[j] == aboniment) {
-                    System.out.println("Вы не можете одновременно заниматься в нескольких местах");
+            for (Zone isZone: aboniment.getType().getZones()) {
+                if (zone.equals(isZone)) {
+                    addToMassive(aboniment, zone, time);
                     test++;
                 }
             }
-            if (test == 0) {
-                for (int i = 0; i < registeredInGym.length; i++) {
-                    if (registeredInGym[i] == null) {
-                        registeredInGym[i] = aboniment;
-                        System.out.println(aboniment.getClient().getSurname() + " " + aboniment.getClient().getName()
-                                + " Посещение тренажорного зала " + dateTimeToStr);
-                        return;
-                    }
-                }
-                System.out.println("Вы не можете пройти в данную зону, так как все места заняты");
-            }
+            if (test == 0) System.out.println("Посещение зоны " + zone + " не доступно для вашего типа абонимента ");
         }
     }
 
-    // только разовый и полный
-    public void registerInSwimmingPool(LocalDateTime time, Subscription aboniment) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
-        String dateTimeToStr = formatter.format(time);
 
-        if (!this.isOpen(time)) {
-            System.out.println("Фитнес зал работает с 8 утра и до 22 вечера");
-            return;
-        } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
-            System.out.println("Ваш абонимент просрочен");
-        } else if (aboniment.getType() == SubscriptionType.NOONTIME) {
-            System.out.println("По вашему абонименту нельзя посещать бассейн");
-        } else {
-            int test = 0;
-            for (int j = 0; j < registeredInGym.length; j++) {
-                if (registeredInGym[j] == aboniment) {
-                    System.out.println("Вы не можете одновременно заниматься в нескольких местах");
-                    test++;
-                } else if (registeredInGroupWorkouts[j] == aboniment) {
-                    System.out.println("Вы не можете одновременно заниматься в нескольких местах");
-                    test++;
-                }
-            }
-            if (test == 0) {
-                for (int i = 0; i < registeredInSwimmingPull.length; i++) {
-                    if (registeredInSwimmingPull[i] == null) {
-                        registeredInSwimmingPull[i] = aboniment;
-                        System.out.println(aboniment.getClient().getSurname() + " " + aboniment.getClient().getName()
-                                + " Посещение бассейна " + dateTimeToStr);
-                        return;
-                    }
-                }
-                System.out.println("Вы не можете пройти в данную зону, так как все места заняты");
-            }
-        }
-    }
-
-    // полный и дневной до 16
-    public void registerInGroupWorkouts(LocalDateTime time, Subscription aboniment) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
-        String dateTimeToStr = formatter.format(time);
-
-        if (!this.isOpen(time)) {
-            System.out.println("Фитнес зал работает с 8 утра и до 22 вечера");
-            return;
-        } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
-            System.out.println("Ваш абонимент просрочен");
-        } else if (aboniment.getType() == SubscriptionType.NOONTIME && time.getHour() >= 16) {
-            System.out.println("По вашему абонименту тренажорный зал можно посещать только до 16 часов");
-        } else if (aboniment.getType() == SubscriptionType.ONETIME) {
-            System.out.println("По вашему абонименту нельзя посетить групповые занятия");
-        } else {
-            int test = 0;
-            for (int j = 0; j < registeredInSwimmingPull.length; j++) {
-                if (registeredInSwimmingPull[j] == aboniment) {
-                    System.out.println("Вы не можете одновременно заниматься в нескольких местах");
-                    test++;
-                } else if (registeredInGym[j] == aboniment) {
-                    System.out.println("Вы не можете одновременно заниматься в нескольких местах");
-                    test++;
-                }
-            }
-            if (test == 0) {
-                for (int i = 0; i < registeredInGroupWorkouts.length; i++) {
-                    if (registeredInGroupWorkouts[i] == null) {
-                        registeredInGroupWorkouts[i] = aboniment;
-                        System.out.println(aboniment.getClient().getSurname() + " " + aboniment.getClient().getName()
-                                + " Посещение групповых занятий " + dateTimeToStr);
-                        return;
-                    }
-                }
-                System.out.println("Вы не можете пройти в данную зону, так как все места заняты");
-            }
-        }
-    }
 
     public boolean isOpen(LocalDateTime time) {
         if (time.getHour() >= 22 ||  time.getHour() < 8) {
@@ -166,19 +81,65 @@ public class Fitness {
     }
 
 
-    // Реализовать возможность вывода информации о посетителях:
-    // сначала посетителях тренажерного зала, потом бассейна, потом групповых занятий.
-    // Это оно?
+    public void addToMassive(Subscription aboniment, Zone zone, LocalDateTime time){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
+        String dateTimeToStr = formatter.format(time);
+        if (zone.equals(Zone.GYM)) {
+            for (int i = 0; i < registeredInGym.length; i++) {
+                if (registeredInGym[i] == null) {
+                    registeredInGym[i] = aboniment;
+                    System.out.println(aboniment.getClient().getSurname() + " " + aboniment.getClient().getName()
+                           + " Посещение тренажорного зала " + dateTimeToStr);
+                    return;
+                }
+            }
+            System.out.println("Вы не можете пройти в данную зону, так как все места заняты");
+        } else if (zone.equals(Zone.SWIMMINGPOOL)) {
+            for (int i = 0; i < registeredInSwimmingPull.length; i++) {
+                if (registeredInSwimmingPull[i] == null) {
+                    registeredInSwimmingPull[i] = aboniment;
+                    System.out.println(aboniment.getClient().getSurname() + " " + aboniment.getClient().getName()
+                            + " Посещение бассейна " + dateTimeToStr);
+                    return;
+                }
+            }
+            System.out.println("Вы не можете пройти в данную зону, так как все места заняты");
+        } else if (zone.equals(Zone.GROUPWORKOUTS)) {
+            for (int i = 0; i < registeredInGroupWorkouts.length; i++) {
+                if (registeredInGroupWorkouts[i] == null) {
+                    registeredInGroupWorkouts[i] = aboniment;
+                    System.out.println(aboniment.getClient().getSurname() + " " + aboniment.getClient().getName()
+                            + " Посещение групповых занятий " + dateTimeToStr);
+                    return;
+                }
+            }
+            System.out.println("Вы не можете пройти в данную зону, так как все места заняты");
+
+        }
+    }
+
+    public boolean isAlreadyRegistered(Subscription aboniment) {
+        boolean result = false;
+        for (int j = 0; j < registeredInSwimmingPull.length; j++) {
+            if (registeredInSwimmingPull[j] == aboniment) {
+                result = true;
+            } else if (registeredInGym[j] == aboniment) {
+                result = true;
+            } else if (registeredInGroupWorkouts[j] == aboniment) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
-        return "fitness.Fitness{" +
+        return "Fitness{" +
                 "registeredInGym=" + Arrays.toString(registeredInGym) +
                 ", registeredInSwimmingPull=" + Arrays.toString(registeredInSwimmingPull) +
                 ", registeredInGroupWorkouts=" + Arrays.toString(registeredInGroupWorkouts) +
                 '}';
     }
-
-
 
 
 
