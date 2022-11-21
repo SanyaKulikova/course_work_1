@@ -35,12 +35,6 @@ public class Fitness {
         this.registeredInGroupWorkouts = registeredInGroupWorkouts;
     }
 
-    // TODO написать методы добовления в массивы -  зоны
-    //  Должны принмать на вход дату-время (после 22 до 8  - пустой массив)
-    //  если абонемент просрочен,
-    //  если он пытается пройти в зону, которая не разрешена по его абонементу,
-    //  если в зоне нет свободных мест
-    //  (если в такой абонимент уже зарегестрирован в другой зоне)
 
     public void registerInZone(LocalDateTime time, Zone zone, Subscription aboniment) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
@@ -48,23 +42,30 @@ public class Fitness {
 
         if (!this.isOpen(time)) {
             System.out.println("Фитнес зал работает с 8 утра и до 22 вечера");
-            return;
-        } else if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
+            return; // если мы делаем таК: то не else if а полноценный новый if
+        }
+        if (time.toLocalDate().isAfter(aboniment.getDateOfEndingRegistration())) {
             System.out.println("Ваш абонимент просрочен");
-        } else if (time.getHour() >= aboniment.getType().getTimeOfEndWork().getHour()) {
-            System.out.println("Проход по вышему абонименту не доступен после " + aboniment.getType().getTimeOfEndWork().getHour()
+            return;
+        }
+        if (time.getHour() >= aboniment.getType().getTimeOfEndWork().getHour()) {
+            System.out.println("Проход по вашему абонименту не доступен после " + aboniment.getType().getTimeOfEndWork().getHour()
                     + " часов");
-        } else if (isAlreadyRegistered(aboniment)) {
-            System.out.println("Вы не можете одновременно заниматься в нескольких местах");
-        } else {
-            int test = 0;
-            for (Zone isZone: aboniment.getType().getZones()) {
-                if (zone.equals(isZone)) {
-                    addToMassive(aboniment, zone, time);
-                    test++;
-                }
+            return;
+        }
+        switch (zone) {
+            case GYM -> {
+                if (!isAlreadyRegistered(aboniment, registeredInGym) && isZoneValid(zone, aboniment)) addToMassive(aboniment, zone, time);
+                else System.out.println("Вы не можете одновременно заниматься в нескольких местах");
             }
-            if (test == 0) System.out.println("Посещение зоны " + zone + " не доступно для вашего типа абонимента ");
+            case SWIMMINGPOOL -> {
+                if (!isAlreadyRegistered(aboniment, registeredInSwimmingPull) && isZoneValid(zone, aboniment)) addToMassive(aboniment, zone, time);
+                else System.out.println("Вы не можете одновременно заниматься в нескольких местах");
+            }
+            case GROUPWORKOUTS -> {
+                if (!isAlreadyRegistered(aboniment, registeredInGroupWorkouts) && isZoneValid(zone, aboniment)) addToMassive(aboniment, zone, time);
+                else System.out.println("Вы не можете одновременно заниматься в нескольких местах");
+            }
         }
     }
 
@@ -81,7 +82,8 @@ public class Fitness {
     }
 
 
-    public void addToMassive(Subscription aboniment, Zone zone, LocalDateTime time){
+    // private - так как импоьзуется только в классе Fitness
+    private void addToMassive(Subscription aboniment, Zone zone, LocalDateTime time){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy в HH:mm");
         String dateTimeToStr = formatter.format(time);
         if (zone.equals(Zone.GYM)) {
@@ -118,18 +120,36 @@ public class Fitness {
         }
     }
 
-    public boolean isAlreadyRegistered(Subscription aboniment) {
+    private boolean isAlreadyRegistered(Subscription aboniment, Subscription[] Subscriptions){
+        for (Subscription subscription: Subscriptions) {
+            if (subscription.equals(aboniment)) return true;
+        }
+        return false;
+    }
+
+    /* private boolean isAlreadyRegistered(Subscription aboniment) {
         boolean result = false;
         for (int j = 0; j < registeredInSwimmingPull.length; j++) {
-            if (registeredInSwimmingPull[j] == aboniment) {
+            if (registeredInSwimmingPull.equals(aboniment)) {// сравнивала registeredInSwimmingPull[j] == aboniment
+                // нужно через equals (и переопределит его для начала))
                 result = true;
-            } else if (registeredInGym[j] == aboniment) {
+            } else if (registeredInGym[j].equals(aboniment)) {
                 result = true;
-            } else if (registeredInGroupWorkouts[j] == aboniment) {
+            } else if (registeredInGroupWorkouts[j].equals(aboniment)) {
                 result = true;
             }
         }
         return result;
+    }*/
+
+
+    public boolean isZoneValid(Zone zone, Subscription aboniment){
+        for (Zone isZone: aboniment.getType().getZones()) {
+            if (zone.equals(isZone)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -45,6 +45,9 @@ public class Application {
         fitness.registerInZone(testTime03, Zone.SWIMMINGPOOL, aboniment13);
         fitness.registerInZone(testTime04, Zone.SWIMMINGPOOL, aboniment13);
         fitness.registerInZone(testTime04, Zone.GROUPWORKOUTS, aboniment12);
+        fitness.registerInZone(testTime04, Zone.GYM, aboniment12);
+        fitness.registerInZone(testTime04, Zone.SWIMMINGPOOL, aboniment12);
+
 
 
 

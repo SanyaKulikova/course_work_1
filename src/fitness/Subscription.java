@@ -1,6 +1,7 @@
 package fitness;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Random;
 
 public class Subscription {
@@ -68,6 +69,30 @@ public class Subscription {
         return aboniment;
     }
 
+    // переопределение метода equals, так как они не сравниваются через =
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Subscription that = (Subscription) o;
+
+        if (type != that.type) return false;
+        if (!Objects.equals(dateOfRegistration, that.dateOfRegistration))
+            return false;
+        if (!Objects.equals(dateOfEndingRegistration, that.dateOfEndingRegistration))
+            return false;
+        return Objects.equals(client, that.client);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (dateOfRegistration != null ? dateOfRegistration.hashCode() : 0);
+        result = 31 * result + (dateOfEndingRegistration != null ? dateOfEndingRegistration.hashCode() : 0);
+        result = 31 * result + (client != null ? client.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {

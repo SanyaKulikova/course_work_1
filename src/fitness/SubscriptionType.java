@@ -39,4 +39,5 @@ SubscriptionType(Zone[] zones, LocalTime timeOfEndWork){
         }
         throw new AssertionError("Wrong ordinal: " + ord);
     }
+
 }
